@@ -11,3 +11,7 @@ requests
 PyJWT
 cryptography
 python-multipart
+
+# Testing dependencies  
+httpx
+pytest-asyncio

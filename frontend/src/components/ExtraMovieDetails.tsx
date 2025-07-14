@@ -17,7 +17,7 @@ export function ExtraMovieDetails({ id }: { id: string }) {
   const [data, setData] = useState<MovieDetails | null>(null);
 
   useEffect(() => {
-    fetch(`${API_URL}/movies/${id}`)
+    fetch(`${API_URL}/api/movies/${id}`)
       .then((res) => res.json())
       .then(setData)
       .catch((e) => console.error(e));
