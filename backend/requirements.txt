@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard] 
+
+# Supabase client
+supabase
+python-dotenv
+pytest
+requests

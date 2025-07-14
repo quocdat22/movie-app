@@ -1,0 +1,11 @@
+
+kích hoạt function và nạp 1000 phim
+curl -X POST 'https://vpwvtaetbqzvzknokkso.supabase.co/functions/v1/fetch_popular_movies' \
+-H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwd3Z0YWV0YnF6dnprbm9ra3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzMzgyNzEsImV4cCI6MjA2NzkxNDI3MX0.DHrp9ChTruFZrUu1y0C_P79G8YUfUTu4nH9PCtwAFy8' \
+-H 'Content-Type: application/json'
+
+20 pages
+curl -L -X POST 'https://vpwvtaetbqzvzknokkso.supabase.co/functions/v1/fetch_new_movies' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZwd3Z0YWV0YnF6dnprbm9ra3NvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzMzgyNzEsImV4cCI6MjA2NzkxNDI3MX0.DHrp9ChTruFZrUu1y0C_P79G8YUfUTu4nH9PCtwAFy8' \
+  -H 'Content-Type: application/json' \
+  --data '{"name":"Functions"}'

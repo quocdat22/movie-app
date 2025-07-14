@@ -1,0 +1,226 @@
+openapi: 3.0.3
+info:
+  title: Movie Service API
+  version: 1.0.0
+  description: |
+    API specification for the Movie web application.
+    Provides endpoints to list, retrieve details, and search movies stored in Supabase.
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: https://api.example.com
+    description: Production server
+
+tags:
+  - name: Movies
+    description: Operations related to movie resources
+
+components:
+  schemas:
+    Movie:
+      type: object
+      description: A movie record.
+      required: [id, title]
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 634649
+        title:
+          type: string
+          example: Spider-Man: No Way Home
+        overview:
+          type: string
+          nullable: true
+        release_year:
+          type: integer
+          nullable: true
+          example: 2021
+        poster_url:
+          type: string
+          format: uri
+          nullable: true
+        genre:
+          type: array
+          items:
+            type: string
+          example: ["Action", "Adventure", "Sci-Fi"]
+        cast_ids:
+          type: array
+          items:
+            type: integer
+          example: [1136406, 12345]
+        company_ids:
+          type: array
+          items:
+            type: integer
+          example: [420, 2338]
+        keyword_ids:
+          type: array
+          items:
+            type: integer
+          example: [6165, 9715]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        page_size:
+          type: integer
+          example: 20
+        total_pages:
+          type: integer
+          example: 50
+        total_items:
+          type: integer
+          example: 1000
+
+    MovieListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Movie'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          example: Movie not found
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      description: Page number (1-indexed)
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PageSizeParam:
+      name: page_size
+      in: query
+      description: Number of items per page
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    SortByParam:
+      name: sort_by
+      in: query
+      description: Field to sort by
+      schema:
+        type: string
+        enum: [popularity, release_year, title, created_at]
+        default: created_at
+    SortOrderParam:
+      name: sort_order
+      in: query
+      description: Sort order direction
+      schema:
+        type: string
+        enum: [asc, desc]
+        default: desc
+
+paths:
+  /movies:
+    get:
+      summary: List movies
+      tags: [Movies]
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PageSizeParam'
+        - name: genre
+          in: query
+          description: Filter by one or more genres
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+        - name: release_year
+          in: query
+          description: Filter by exact release year
+          schema:
+            type: integer
+        - name: release_year_gte
+          in: query
+          description: Filter movies released on or after the given year
+          schema:
+            type: integer
+        - name: release_year_lte
+          in: query
+          description: Filter movies released on or before the given year
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/SortByParam'
+        - $ref: '#/components/parameters/SortOrderParam'
+      responses:
+        '200':
+          description: A paginated list of movies.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieListResponse'
+
+  /movies/{id}:
+    get:
+      summary: Get movie details by ID
+      tags: [Movies]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Movie details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '404':
+          description: Movie not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /movies/search:
+    get:
+      summary: Search movies by title.
+      tags: [Movies]
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Search query string.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PageSizeParam'
+        - $ref: '#/components/parameters/SortByParam'
+        - $ref: '#/components/parameters/SortOrderParam'
+      responses:
+        '200':
+          description: A list of movies matching the search query.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieListResponse' 
