@@ -30,7 +30,40 @@ export async function updateSession(request: NextRequest) {
   )
 
   // This will refresh session if expired - required for Server Components
-  await supabase.auth.getUser()
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  // Define protected routes that require authentication
+  const protectedRoutes = [
+    '/dashboard',
+    '/profile',
+    '/favorites',
+    '/watchlist',
+    '/reviews/create',
+    '/movies/rate'
+  ]
+
+  // Define auth routes (login/register pages)
+  const authRoutes = ['/auth/login', '/auth/register']
+
+  const isProtectedRoute = protectedRoutes.some(route => 
+    request.nextUrl.pathname.startsWith(route)
+  )
+  
+  const isAuthRoute = authRoutes.some(route => 
+    request.nextUrl.pathname === route
+  )
+
+  // If user is logged in and trying to access auth pages, redirect to dashboard
+  if (user && isAuthRoute) {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
+  // If user is not logged in and trying to access protected routes, redirect to login
+  if (!user && isProtectedRoute) {
+    const redirectUrl = new URL('/auth/login', request.url)
+    redirectUrl.searchParams.set('redirectTo', request.nextUrl.pathname)
+    return NextResponse.redirect(redirectUrl)
+  }
 
   return response
 }

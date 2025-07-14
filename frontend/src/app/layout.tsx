@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 
 const interSans = Inter({
   variable: "--font-geist-sans",
@@ -28,10 +29,12 @@ export default function RootLayout({
       <body
         className={`${interSans.variable} ${robotoMono.variable} antialiased`}
       >
-        <Header />
-        <main className="min-h-[calc(100vh-56px)]">
-          {children}
-        </main>
+        <AuthProvider>
+          <Header />
+          <main className="min-h-[calc(100vh-56px)]">
+            {children}
+          </main>
+        </AuthProvider>
       </body>
     </html>
   );
