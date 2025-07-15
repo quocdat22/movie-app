@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { authService } from '@/lib/auth'
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react'
+import { GoogleSignInButton } from './GoogleSignInButton'
 
 interface RegisterFormProps {
   onSuccess?: () => void
@@ -177,6 +178,25 @@ export function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) 
         <p className="text-muted-foreground">Sign up to start discovering movies</p>
       </div>
 
+      {/* Google Sign In Button */}
+      <div className="space-y-4">
+        <GoogleSignInButton 
+          onError={(error) => setErrors({ submit: error })}
+          disabled={isLoading}
+        />
+        
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Or sign up with email
+            </span>
+          </div>
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Full Name Field */}
         <div className="space-y-2">
@@ -314,6 +334,11 @@ export function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) 
           {isLoading ? 'Creating account...' : 'Create account'}
         </Button>
       </form>
+
+      {/* Google Sign-In Button */}
+      <div className="w-full">
+        <GoogleSignInButton />
+      </div>
 
       {/* Switch to Login */}
       <div className="text-center text-sm">

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { authService } from '@/lib/auth'
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
+import { GoogleSignInButton } from './GoogleSignInButton'
 
 interface LoginFormProps {
   onSuccess?: () => void
@@ -118,6 +119,25 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
         <p className="text-muted-foreground">Sign in to your account to continue</p>
       </div>
 
+      {/* Google Sign In Button */}
+      <div className="space-y-4">
+        <GoogleSignInButton 
+          onError={(error) => setErrors({ submit: error })}
+          disabled={isLoading}
+        />
+        
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Or continue with email
+            </span>
+          </div>
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Email Field */}
         <div className="space-y-2">
@@ -183,6 +203,16 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
           {isLoading ? 'Signing in...' : 'Sign in'}
         </Button>
       </form>
+
+      {/* Forgot Password Link */}
+      <div className="text-center">
+        <a 
+          href="/auth/forgot-password"
+          className="text-sm text-primary hover:underline"
+        >
+          Forgot your password?
+        </a>
+      </div>
 
       {/* Switch to Register */}
       <div className="text-center text-sm">

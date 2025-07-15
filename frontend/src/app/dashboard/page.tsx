@@ -2,11 +2,14 @@
 
 import { useAuth } from '@/components/providers/AuthProvider'
 import { Button } from '@/components/ui/button'
+import { DashboardPasswordReset } from '@/components/auth/DashboardPasswordReset'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function DashboardPage() {
   const { user, profile, loading } = useAuth()
   const router = useRouter()
+  const [showPasswordReset, setShowPasswordReset] = useState(false)
 
   if (loading) {
     return (
@@ -36,13 +39,20 @@ export default function DashboardPage() {
               <p><strong>Name:</strong> {profile?.full_name || 'Not set'}</p>
               <p><strong>Member since:</strong> {profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : 'Unknown'}</p>
             </div>
-            <Button 
-              variant="outline" 
-              className="mt-4"
-              onClick={() => router.push('/profile')}
-            >
-              Edit Profile
-            </Button>
+            <div className="flex gap-2 mt-4">
+              <Button 
+                variant="outline" 
+                onClick={() => router.push('/profile')}
+              >
+                Edit Profile
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => setShowPasswordReset(!showPasswordReset)}
+              >
+                {showPasswordReset ? 'Hide' : 'Reset Password'}
+              </Button>
+            </div>
           </div>
 
           {/* Quick Actions */}
@@ -73,6 +83,18 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* Password Reset Section */}
+        {showPasswordReset && (
+          <div className="mt-8 bg-card rounded-lg border p-6">
+            <DashboardPasswordReset 
+              onSuccess={() => {
+                // Optional: show a success message or perform additional actions
+                setTimeout(() => setShowPasswordReset(false), 3000)
+              }}
+            />
+          </div>
+        )}
 
         {/* Recent Activity */}
         <div className="mt-8 bg-card rounded-lg border p-6">

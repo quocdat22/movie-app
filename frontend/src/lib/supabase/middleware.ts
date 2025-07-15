@@ -43,7 +43,10 @@ export async function updateSession(request: NextRequest) {
   ]
 
   // Define auth routes (login/register pages)
-  const authRoutes = ['/auth/login', '/auth/register']
+  const authRoutes = ['/auth/login', '/auth/register', '/auth/forgot-password', '/auth/reset-password']
+  
+  // Define routes that should not be redirected during auth flow
+  const authCallbackRoutes = ['/auth/callback', '/auth/auth-code-error']
 
   const isProtectedRoute = protectedRoutes.some(route => 
     request.nextUrl.pathname.startsWith(route)
@@ -52,6 +55,15 @@ export async function updateSession(request: NextRequest) {
   const isAuthRoute = authRoutes.some(route => 
     request.nextUrl.pathname === route
   )
+  
+  const isAuthCallbackRoute = authCallbackRoutes.some(route => 
+    request.nextUrl.pathname.startsWith(route)
+  )
+
+  // Skip redirects for auth callback routes
+  if (isAuthCallbackRoute) {
+    return response
+  }
 
   // If user is logged in and trying to access auth pages, redirect to dashboard
   if (user && isAuthRoute) {

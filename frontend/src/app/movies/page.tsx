@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 
 import { MovieList } from "@/components/MovieList"
@@ -38,6 +38,14 @@ function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
 
 
 export default function MoviesPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center min-h-screen"><div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div></div>}>
+      <MoviesPageContent />
+    </Suspense>
+  )
+}
+
+function MoviesPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -150,4 +158,4 @@ export default function MoviesPage() {
       )}
     </div>
   )
-} 
+}
