@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { authService } from '@/lib/auth'
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
+import { FcGoogle } from 'react-icons/fc'
 
 interface LoginFormProps {
   onSuccess?: () => void
@@ -111,6 +113,17 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
     validateField(field, e.target.value)
   }
 
+  // Google Sign In Button
+  const handleGoogleSignIn = async () => {
+    const supabase = createClient();
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined,
+      },
+    });
+  };
+
   return (
     <div className="w-full max-w-md mx-auto space-y-6">
       <div className="text-center space-y-2">
@@ -181,6 +194,23 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
           disabled={isLoading}
         >
           {isLoading ? 'Signing in...' : 'Sign in'}
+        </Button>
+        {/* Google Sign In Divider */}
+        <div className="flex items-center my-2">
+          <div className="flex-grow h-px bg-gray-200" />
+          <span className="mx-2 text-gray-400 text-xs">or</span>
+          <div className="flex-grow h-px bg-gray-200" />
+        </div>
+        {/* Google Sign In Button */}
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full flex items-center justify-center gap-2 border-gray-300"
+          onClick={handleGoogleSignIn}
+          disabled={isLoading}
+        >
+          <FcGoogle className="w-5 h-5" />
+          Sign in with Google
         </Button>
       </form>
 

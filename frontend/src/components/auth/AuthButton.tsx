@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { AuthModal } from './AuthModal'
 import { useAuth } from '@/components/providers/AuthProvider'
 import { User, LogOut } from 'lucide-react'
+import Link from 'next/link';
 
 export function AuthButton() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
@@ -28,12 +29,12 @@ export function AuthButton() {
   if (user) {
     return (
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2 text-sm">
+        <Link href="/dashboard" className="flex items-center gap-2 text-sm hover:underline">
           <User className="h-4 w-4" />
           <span className="hidden sm:inline">
             {profile?.full_name || user.email?.split('@')[0] || 'User'}
           </span>
-        </div>
+        </Link>
         <Button
           variant="ghost"
           size="sm"
