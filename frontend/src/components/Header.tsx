@@ -7,8 +7,7 @@ import { usePathname } from 'next/navigation';
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { supabase } from "@/lib/supabase";
-import { useSupabaseSession } from "@/hooks/useSupabaseSession";
+import { AuthButton } from "@/components/auth/AuthButton";
 
 /**
  * Main application header component.
@@ -23,18 +22,7 @@ export function Header() {
   ];
 
   const [open, setOpen] = useState(false);
-  const session = useSupabaseSession();
-  const isAuthenticated = Boolean(session);
   const pathname = usePathname();
-
-  const handleLogin = async () => {
-    // Placeholder: redirect to Supabase OAuth provider (GitHub)
-    await supabase.auth.signInWithOAuth({ provider: "github" });
-  };
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-  };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -116,14 +104,9 @@ export function Header() {
           </Button>
 
           {/* Auth action */}
-          <Button
-            variant="outline"
-            size="sm"
-            className="hidden sm:inline-flex"
-            onClick={isAuthenticated ? handleLogout : handleLogin}
-          >
-            {isAuthenticated ? "Logout" : "Login"}
-          </Button>
+          <div className="hidden sm:block">
+            <AuthButton />
+          </div>
         </div>
       </div>
 
@@ -155,16 +138,7 @@ export function Header() {
           <div className="my-2 border-t border-border/40"></div>
 
           {/* Auth button in mobile */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setOpen(false);
-              isAuthenticated ? handleLogout() : handleLogin();
-            }}
-          >
-            {isAuthenticated ? "Logout" : "Login"}
-          </Button>
+          <AuthButton />
         </div>
       </nav>
     </header>

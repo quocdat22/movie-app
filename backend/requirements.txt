@@ -6,3 +6,12 @@ supabase
 python-dotenv
 pytest
 requests
+
+# Authentication
+PyJWT
+cryptography
+python-multipart
+
+# Testing dependencies  
+httpx
+pytest-asyncio

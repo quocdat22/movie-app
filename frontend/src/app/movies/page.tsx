@@ -58,16 +58,22 @@ export default function MoviesPage() {
     }
 
     try {
-      const res = await fetch(`${API_URL}/movies?${params.toString()}`)
+      const res = await fetch(`${API_URL}/api/movies?${params.toString()}`)
       if (!res.ok) throw new Error("Failed to fetch movies")
       const body = await res.json()
 
       if(loadMore) {
-        setMovies((prev) => [...prev, ...body.data])
+        setMovies((prev) => [...prev, ...body.movies])  // Fixed: body.movies instead of body.data
       } else {
-        setMovies(body.data)
+        setMovies(body.movies)  // Fixed: body.movies instead of body.data
       }
-      setPagination(body.pagination)
+      // Fixed: extract pagination from top level response
+      setPagination({
+        page: body.page,
+        page_size: body.per_page,
+        total_pages: body.total_pages,
+        total_items: body.total
+      })
     } catch (error) {
       console.error(error)
       // TODO: show toast notification
@@ -79,10 +85,10 @@ export default function MoviesPage() {
 
   const fetchGenres = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/movies/genres`)
+      const res = await fetch(`${API_URL}/api/movies/genres`)
       if (!res.ok) throw new Error("Failed to fetch genres")
       const body = await res.json()
-      setGenres(body.data)
+      setGenres(body.data)  // This is correct - genres API returns { data: [...] }
     } catch (error) {
       console.error(error)
     }

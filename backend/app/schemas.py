@@ -21,6 +21,11 @@ class Movie(BaseModel):
     keyword_ids: Optional[List[int]] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
+    
+    # User-specific fields (optional, only populated when user is authenticated)
+    user_rating: Optional[float] = Field(None, ge=0.5, le=5.0, description="User's rating for this movie")
+    is_favorite: Optional[bool] = Field(None, description="Whether this movie is in user's favorites")
+    in_watchlist: Optional[bool] = Field(None, description="Whether this movie is in user's watchlist")
 
 
 class CastMember(BaseModel):
@@ -46,16 +51,13 @@ class MovieDetailResponse(Movie):
     production_companies: List[Company] = []
 
 
-class Pagination(BaseModel):
-    page: int = Field(1, ge=1)
-    page_size: int = Field(20, ge=1, le=100)
-    total_pages: int
-    total_items: int
-
-
 class MovieListResponse(BaseModel):
-    data: List[Movie]
-    pagination: Pagination
+    """Response for movie list endpoints with pagination."""
+    movies: List[Movie]
+    page: int = Field(1, ge=1)
+    per_page: int = Field(20, ge=1, le=50)
+    total: int = Field(0, ge=0)
+    total_pages: int = Field(0, ge=0)
 
 
 class GenreListResponse(BaseModel):

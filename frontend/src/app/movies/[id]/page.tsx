@@ -30,7 +30,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 
 async function getMovieLite(id: string): Promise<MovieLite | null> {
   try {
-    const res = await fetch(`${API_URL}/movies/${id}?lite=true`, { next: { revalidate: 3600 } });
+    const res = await fetch(`${API_URL}/api/movies/${id}?lite=true`, { next: { revalidate: 3600 } });
     if (!res.ok) {
       if (res.status === 404) {
         return null;

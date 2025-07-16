@@ -27,7 +27,7 @@ export function CastSection({ id }: { id: string }) {
     }
 
     setIsLoading(true);
-    fetch(`${API_URL}/movies/${id}`)
+    fetch(`${API_URL}/api/movies/${id}`)
       .then((res) => res.json())
       .then((result) => {
         setData(result);
